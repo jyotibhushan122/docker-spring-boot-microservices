@@ -1,0 +1,520 @@
+DATE: before 13th APRIL
+
+PS D:\WK-SPACE\customer-order> docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+<none>              <none>              77e6f911f550        5 days ago          550MB
+<none>              <none>              451375e791e6        5 days ago          527MB
+openjdk             8                   0d54b885dc70        13 days ago         510MB
+mysql               8.0                 9228ee8bac7a        2 weeks ago         547MB
+PS D:\WK-SPACE\customer-order> docker build -t customer-order .
+Sending build context to Docker daemon  39.05MB
+Step 1/4 : FROM openjdk:8
+ ---> 0d54b885dc70
+Step 2/4 : ADD target/customer-order.jar customer-order.jar
+ ---> c6c26c85bf1d
+Step 3/4 : EXPOSE 8080
+ ---> Running in d5cb92d13a0f
+Removing intermediate container d5cb92d13a0f
+ ---> 42801c6809fe
+Step 4/4 : ENTRYPOINT ["java", "-jar", "customer-order.jar"]
+ ---> Running in 1edf491d2eb3
+Removing intermediate container 1edf491d2eb3
+ ---> fe8a70457bb4
+Successfully built fe8a70457bb4
+Successfully tagged customer-order:latest
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and director
+ies added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions f
+or sensitive files and directories.
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+customer-order      latest              fe8a70457bb4        53 seconds ago      549MB
+<none>              <none>              77e6f911f550        5 days ago          550MB
+<none>              <none>              451375e791e6        5 days ago          527MB
+openjdk             8                   0d54b885dc70        13 days ago         510MB
+mysql               8.0                 9228ee8bac7a        2 weeks ago         547MB
+PS D:\WK-SPACE\customer-order> docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS
+NAMES
+PS D:\WK-SPACE\customer-order> docker run --name mysql-standalone -e MYSQL_ROOT_PASSWORD=root -d
+"docker run" requires at least 1 argument.
+See 'docker run --help'.
+
+Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...] [flags]
+
+Run a command in a new container
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker run --name mysql-standalone -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=test
+ -e MYSQL_USER=sa -e MYSQL_PASSWORD=password -d mysql:8.0
+D:\DOCKER\docker.exe: Error response from daemon: Conflict. The container name "/mysql-standalone" is already in use by
+container "471e824607854165da1e1735f7953e56d26d193c51fd86d0c56221671d436c02". You have to remove (or rename) that contai
+ner to be able to reuse that name.
+See 'D:\DOCKER\docker.exe run --help'.
+PS D:\WK-SPACE\customer-order> docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS
+NAMES
+PS D:\WK-SPACE\customer-order> docker rm mysql-standalone
+mysql-standalone
+PS D:\WK-SPACE\customer-order> docker run --name mysql-standalone -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=test
+ -e MYSQL_USER=sa -e MYSQL_PASSWORD=password -d mysql:8.0
+2a51708b47b69595f3ad15dc80cc91e8db77fa964171d75f35e92c1d4182b8d9
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS
+       NAMES
+2a51708b47b6        mysql:8.0           "docker-entrypoint.s"   55 seconds ago      Up 7 seconds        3306/tcp, 33060/
+tcp   mysql-standalone
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+customer-order      latest              fe8a70457bb4        11 minutes ago      549MB
+<none>              <none>              77e6f911f550        5 days ago          550MB
+<none>              <none>              451375e791e6        5 days ago          527MB
+openjdk             8                   0d54b885dc70        13 days ago         510MB
+mysql               8.0                 9228ee8bac7a        2 weeks ago         547MB
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker run -p 8080:8080 --name customer-order --link mysql-standalone -d customer-order
+8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c8960f9608
+PS D:\WK-SPACE\customer-order> docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+customer-order      latest              fe8a70457bb4        13 minutes ago      549MB
+<none>              <none>              77e6f911f550        5 days ago          550MB
+<none>              <none>              451375e791e6        5 days ago          527MB
+openjdk             8                   0d54b885dc70        13 days ago         510MB
+mysql               8.0                 9228ee8bac7a        2 weeks ago         547MB
+PS D:\WK-SPACE\customer-order> docker --help
+
+Usage:  docker COMMAND
+
+A self-sufficient runtime for containers
+
+Options:
+      --config string      Location of client config files (default
+                           "C:\\Users\\shiv\\.docker")
+  -D, --debug              Enable debug mode
+  -H, --host list          Daemon socket(s) to connect to
+  -l, --log-level string   Set the logging level
+                           ("debug"|"info"|"warn"|"error"|"fatal")
+                           (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default
+                           "C:\\Users\\shiv\\.docker\\machine\\machines\\default\\ca.pem")
+      --tlscert string     Path to TLS certificate file (default
+                           "C:\\Users\\shiv\\.docker\\machine\\machines\\default\\cert.pem")
+      --tlskey string      Path to TLS key file (default
+                           "C:\\Users\\shiv\\.docker\\machine\\machines\\default\\key.pem")
+      --tlsverify          Use TLS and verify the remote (default true)
+  -v, --version            Print version information and quit
+
+Management Commands:
+  config      Manage Docker configs
+  container   Manage containers
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  swarm       Manage Swarm
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  build       Build an image from a Dockerfile
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  images      List images
+  import      Import the contents from a tarball to create a filesystem image
+  info        Display system-wide information
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  ps          List containers
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  run         Run a command in a new container
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  search      Search the Docker Hub for images
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  version     Show the Docker version information
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker COMMAND --help' for more information on a command.
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS
+          NAMES
+8c3eed5a0159        customer-order      "java -jar customer-"   3 minutes ago       Up 2 minutes        0.0.0.0:8080->80
+80/tcp   customer-order
+2a51708b47b6        mysql:8.0           "docker-entrypoint.s"   8 minutes ago       Up 7 minutes        3306/tcp, 33060/
+tcp      mysql-standalone
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> docker inspect 8c3eed5a0159
+[
+    {
+        "Id": "8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c8960f9608",
+        "Created": "2020-04-14T10:35:05.624089321Z",
+        "Path": "java",
+        "Args": [
+            "-jar",
+            "customer-order.jar"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 3123,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-04-14T10:35:07.057155235Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:fe8a70457bb4c790ed26eded64965a339e0c28a48ff36dcf280f2725c4f60732",
+        "ResolvConfPath": "/mnt/sda1/var/lib/docker/containers/8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c89
+60f9608/resolv.conf",
+        "HostnamePath": "/mnt/sda1/var/lib/docker/containers/8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c8960
+f9608/hostname",
+        "HostsPath": "/mnt/sda1/var/lib/docker/containers/8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c8960f96
+08/hosts",
+        "LogPath": "/mnt/sda1/var/lib/docker/containers/8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c8960f9608
+/8c3eed5a0159020bb193f14cfd377712e2da9c2006e3b4e4847a26c8960f9608-json.log",
+        "Name": "/customer-order",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Capabilities": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "shareable",
+            "Cgroup": "",
+            "Links": [
+                "/mysql-standalone:/customer-order/mysql-standalone"
+            ],
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                50,
+                120
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "KernelMemory": 0,
+            "KernelMemoryTCP": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/mnt/sda1/var/lib/docker/overlay2/001eba89796348a9aef7c83d1a80ed51ce74b03683d311b05a6c589e4
+84f20bd-init/diff:/mnt/sda1/var/lib/docker/overlay2/3f61b06cd4fb609dc1e948fcd025dc155b7e72d30406795acf21cac0f57a173d/dif
+f:/mnt/sda1/var/lib/docker/overlay2/65933a81aaff8d415715bb296f3a0f553980fcd9f51ba099b15b4ed5b58fe877/diff:/mnt/sda1/var/
+lib/docker/overlay2/29f32d681263659cf5855bc4d7470935f9384b24ffa120f3878f9955ed6a1451/diff:/mnt/sda1/var/lib/docker/overl
+ay2/a33419c922b55ca5d771e443e59ff723da23bc00ddf8ec9718fe175e2fb74c5d/diff:/mnt/sda1/var/lib/docker/overlay2/671f66ff8967
+825b1896e27fda3a7bb6a5134766b4e425d8b4a9fc86ba972d13/diff:/mnt/sda1/var/lib/docker/overlay2/e27af662952681c7ca6cad291028
+4b84b2daa8fddb96ff33b30dd820a7b6d4ea/diff:/mnt/sda1/var/lib/docker/overlay2/c87c9d41b057de37d4a0128c9679d5fc27ea7c822e72
+a0e01d21387adf031a9c/diff:/mnt/sda1/var/lib/docker/overlay2/262dd2a34b17d76db73f4e53c1032b9387302673d2988334ab5e01ea1ec8
+45c6/diff",
+                "MergedDir": "/mnt/sda1/var/lib/docker/overlay2/001eba89796348a9aef7c83d1a80ed51ce74b03683d311b05a6c589e
+484f20bd/merged",
+                "UpperDir": "/mnt/sda1/var/lib/docker/overlay2/001eba89796348a9aef7c83d1a80ed51ce74b03683d311b05a6c589e4
+84f20bd/diff",
+                "WorkDir": "/mnt/sda1/var/lib/docker/overlay2/001eba89796348a9aef7c83d1a80ed51ce74b03683d311b05a6c589e48
+4f20bd/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "8c3eed5a0159",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "JAVA_HOME=/usr/local/openjdk-8",
+                "JAVA_VERSION=8u242",
+                "JAVA_BASE_URL=https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/releases/download/jdk8u242-b08
+/OpenJDK8U-jdk_",
+                "JAVA_URL_VERSION=8u242b08"
+            ],
+            "Cmd": null,
+            "Image": "customer-order",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "java",
+                "-jar",
+                "customer-order.jar"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "0aefd61ee9ea96cb0d65aa3da0f868f9afbb789dafeb0d333ac9e7bdbf46a3ba",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/docker/netns/0aefd61ee9ea",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "387ab5120e9bad309528d20d7e762e2102e369b1b56ef293993bceb4c8753fd6",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.3",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:03",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "3bfeb0681e7f00f91b2ae10c96e7150f4c0750d521c1d8997e27d2c32d5359e5",
+                    "EndpointID": "387ab5120e9bad309528d20d7e762e2102e369b1b56ef293993bceb4c8753fd6",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:03",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> ocker exec -it mysql_container_name mysql -uroot -p
+The term 'ocker' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spell
+ing of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:6
++ ocker <<<<  exec -it mysql_container_name mysql -uroot -p
+    + CategoryInfo          : ObjectNotFound: (ocker:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS D:\WK-SPACE\customer-order> docker exec -it mysql_container_name mysql -uroot -p
+Error: No such container: mysql_container_name
+PS D:\WK-SPACE\customer-order> docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS
+          NAMES
+8c3eed5a0159        customer-order      "java -jar customer-"   7 minutes ago       Up 7 minutes        0.0.0.0:8080->80
+80/tcp   customer-order
+2a51708b47b6        mysql:8.0           "docker-entrypoint.s"   12 minutes ago      Up 11 minutes       3306/tcp, 33060/
+tcp      mysql-standalone
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order>
+PS D:\WK-SPACE\customer-order> ocker exec -it mysql-standalone mysql -uroot -p
+The term 'ocker' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spell
+ing of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:6
++ ocker <<<<  exec -it mysql-standalone mysql -uroot -p
+    + CategoryInfo          : ObjectNotFound: (ocker:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS D:\WK-SPACE\customer-order> docker exec -it mysql-standalone mysql -uroot -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 18
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE Name-Of-The-Database
+ERROR 1049 (42000): Unknown database 'Name-Of-The-Database'
+mysql> USE mysql-standalone
+ERROR 1049 (42000): Unknown database 'mysql-standalone'
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql> use test;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_test  |
++-----------------+
+| customer_entity |
++-----------------+
+1 row in set (0.01 sec)
+
+mysql> select * from customer_entity;
++----+----------+---------------+------------------+---------------+
+| id | addres   | customer_name | design           | mobile_number |
++----+----------+---------------+------------------+---------------+
+|  1 | Ammerpet | jyoti         |  java devloper_2 |        828022 |
++----+----------+---------------+------------------+---------------+
+1 row in set (0.00 sec)
+
+mysql>  DATE: before 13th APRIL
+
+============after 13th APRIL========#@##@#@#@#@#@#@#@#@#@#@#@#@#@#@#@======================================
+
+
