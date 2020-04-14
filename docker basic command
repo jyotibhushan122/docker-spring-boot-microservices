@@ -1,0 +1,41 @@
+https://webme.ie/how-to-install-docker-on-windows-7/
+
+
+
+//to bild images
+>> docker build -t spring-boot-docker.jar .
+
+//to see the images
+>>  docker images
+
+
+
+// run images to create contanier
+docker run -p 9091:8080 spring-boot-docker.jar
+
+
+//to stop docker container
+docker stop $(docker ps -a -q)
+
+//docker machine restart
+docker-machine restart  //to restrat docker
+
+
+//pull images from Docker Hub
+docker pull mysql:8.0
+
+//running mysql image to create contaner
+
+docker run --name mysql-standalone -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=test -e MYSQL_USER=sa -e MYSQL_PASSWORD=password -d mysql:8.0
+
+
+//to remove container  
+
+docker rm container  name>
+
+>>docker rm mysql-standalone
+
+
+
+//to run container and its linked contanner
+docker run -p 8080:8080 --name customer-order --link mysql-standalone -d customer-order
