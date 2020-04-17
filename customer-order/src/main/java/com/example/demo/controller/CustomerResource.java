@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +15,7 @@ import com.example.demo.entity.CustomerEntity;
 import com.example.demo.service.CustomerService;
 
 @RestController
+@CrossOrigin
 public class CustomerResource {
 	@Autowired
 	private CustomerService customerService;
@@ -31,12 +34,16 @@ public class CustomerResource {
 	public CustomerEntity getCustomer(@RequestParam Integer mobileNu) {
 		try {
 			Optional<CustomerEntity> entity = customerService.getCustomerInfo(mobileNu);
-		
+
 			return (entity.isPresent()) ? entity.get() : null;
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return null;
+	}
 
+	@GetMapping(value = "/getAllCustomer")
+	public List<CustomerEntity> getAllCustomer() {
+		return customerService.getAllCustomer();
 	}
 }

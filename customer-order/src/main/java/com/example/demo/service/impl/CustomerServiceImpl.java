@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,14 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Optional<CustomerEntity> getCustomerInfo(Integer mobileNumber) {
-		 return customerRepo.findByMobileNumber(mobileNumber);
-		
+		return customerRepo.findByMobileNumber(mobileNumber);
 
+	}
+
+	@Override
+	public List<CustomerEntity> getAllCustomer() {
+
+		return customerRepo.findAll();
 	}
 
 }
