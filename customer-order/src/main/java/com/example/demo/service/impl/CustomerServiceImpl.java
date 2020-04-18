@@ -23,8 +23,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Optional<CustomerEntity> getCustomerInfo(Integer mobileNumber) {
-		return customerRepo.findByMobileNumber(mobileNumber);
+	public Optional<CustomerEntity> getCustomerInfo(Long id) {
+		return customerRepo.findById(id);
 
 	}
 

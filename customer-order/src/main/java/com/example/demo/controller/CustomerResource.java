@@ -31,9 +31,9 @@ public class CustomerResource {
 	}
 
 	@GetMapping(value = "/getCustomer")
-	public CustomerEntity getCustomer(@RequestParam Integer mobileNu) {
+	public CustomerEntity getCustomer(@RequestParam(name = "id") Long id) {
 		try {
-			Optional<CustomerEntity> entity = customerService.getCustomerInfo(mobileNu);
+			Optional<CustomerEntity> entity = customerService.getCustomerInfo(id);
 
 			return (entity.isPresent()) ? entity.get() : null;
 		} catch (Exception e) {

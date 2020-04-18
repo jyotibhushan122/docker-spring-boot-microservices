@@ -54,6 +54,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>
+				spring-cloud-starter-netflix-eureka-client
+			</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -80,4 +86,11 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<repositories>
+		<repository>
+			<id>repository.spring.release</id>
+			<name>Spring GA Repository</name>
+			<url>http://repo.spring.io/release</url>
+		</repository>
+	</repositories>
 </project>

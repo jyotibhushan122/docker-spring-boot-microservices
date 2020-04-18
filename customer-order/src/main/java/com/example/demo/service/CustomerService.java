@@ -9,7 +9,7 @@ public interface CustomerService {
 
 	public void registerCustomer(CustomerEntity customerEntity) throws Exception;
 
-	public Optional<CustomerEntity> getCustomerInfo(Integer mobileNumber);
+	public Optional<CustomerEntity> getCustomerInfo(Long id);
 
 	public List<CustomerEntity> getAllCustomer();
 }
