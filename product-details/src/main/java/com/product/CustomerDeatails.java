@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
 @RestController
 public class CustomerDeatails {
 
@@ -59,5 +62,43 @@ public class CustomerDeatails {
 	private List<ServiceInstance> getServiceInstance(String serviceName) {
 
 		return discoveryClient.getInstances(serviceName);
+	}
+
+	@GetMapping(value = "/getCustomerDetails_1")
+	@HystrixCommand(fallbackMethod = "getCustomerDetails_fallBackeTest", commandProperties = {
+
+			/**
+			 * to control the thread , to calculate error percentage on a given request
+			 * threshold to do circuit breaker and checks service to be up.
+			 */
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5"),
+			@HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "500"),
+			@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "1000") })
+
+	/**
+	 * NOTE: @HystrixCommand command not applicable on sub caller method. to work
+	 * with sub caller method annoted with @HystrixCommand need to work with new
+	 * class and @Autowired in main caller class to call that @HystrixCommand
+	 * annoted service.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public String getCustomerDetails_1(@RequestParam(name = "id") long id) {
+		CustomerEntity entiy = webClient.build().get()
+
+				// WAY:2
+				// .uri("http://localhost:8080/getCustomer?id=" + id)
+				// updating with service discovery name
+
+				// WAY:3
+				.uri("http://CUSTOMER-ORDER/getCustomer?id=" + id).retrieve().bodyToMono(CustomerEntity.class).block();
+		return entiy.getCustomerName();
+	}
+
+	private String getCustomerDetails_fallBackeTest(long id) {
+		return "Response from fallback";
 	}
 }

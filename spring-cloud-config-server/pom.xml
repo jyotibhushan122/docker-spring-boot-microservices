@@ -63,7 +63,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<finalName>spring-cloud-config-server</finalName>
+					<finalName>cloud-config</finalName>
 				</configuration>
 			</plugin>
 		</plugins>

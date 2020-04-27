@@ -1,4 +1,4 @@
 FROM openjdk:8 
-ADD target/customer-order.jar customer-order.jar 
-EXPOSE 8080 
-ENTRYPOINT ["java", "-jar", "customer-order.jar"]
+ADD target/discovery-server.jar discovery-server.jar 
+EXPOSE 8761 
+ENTRYPOINT ["java", "-jar", "discovery-server.jar"]
